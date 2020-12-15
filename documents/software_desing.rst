@@ -2,84 +2,24 @@ TODO Application
  - software design document.
 
 
-# RESTful Endpoints
-
-`API` is a Flask application running using Gunicorn. 
-
-   `/anagram/<string:word_one>/<string:word_two>` 
-       Takes to strings : `word_one` and `word_two`, places them
-       into [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) queue, waits for result, reads result and
-       returns back True if valid anagram, False otherwice.
-
-   `/readall/`
-       Read all the records from
-[MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database. Render them
-       as JSON using Marchmallow module.
-
-   `/readbystate/<int:valid>`   
-       Return all anagrams for valid = 1 and all non-anagrams
-       for valid = 0. 
-
-   `/delete/<int:id>`
-       Take a record id and remove it from
-[MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database.
-
-   `/check/<string:task_id>`
-       Provide a task ID and read task status - helper endpoint.
-
-# Models
-
-   - file `models.py`
-   - Models used: Record model to save 2 words, result of validations,
-     time processed.
-   
-# Marchmallow 
-   Marchmallow is a Python module alowing to serialize data into JSON
-   It uses schemas defined based on fields that need to be rendered - 
-   here we use it with Record model and construct schema out of model.
-
-   - file `models.py`
-   - Schemas: RecordSchema created out of Record model to render JSON.
-
-# Databases
-   - `maindb` is the
-     [MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database used with SQLAlchemy to save records.
-   - `Dockerfile` contains the settings for user credentials
-   - `mysql/schema/schema.sql` contains the initial migration to create
-     when `docker-compose build` is run.
-
-### TODO
- - Add Nginx support.
- - Add caching and optimize
-   [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) tasks for better performance.
- - Make MySQL connection configurable from cfg file.
- - Add more configurability for IPs/ports 
- - Add better migrations for
-   [MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) using SQLAlchemy.
- - Add more
-   [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) tasks and outsource the logic from endpoints into tasks.
-
-
-
-
 Contents:
   1.Introduction
-      - 1.1 Purpose
-      - 1.2 Scope
-      - 1.3 Definitions
+      1.1 Purpose
+      1.2 Scope
+      1.3 Definitions
       
-  2. Overall Description
-      - 2.1 Product Perspective
-             2.1.1 Class Diagram
-             2.1.2 State Diagram
-             2.1.3 Sequence Diagram
+  2.Overall Description
+      2.1 Product Perspective
+          2.1.1 Class Diagram
+          2.1.2 State Diagram
+          2.1.3 Sequence Diagram
          
-      - 2.2 Product Functions
+      2.2 Product Functions
          
-      - 2.3 User Characteristics
-             2.3.1 Actors
+      2.3 User Characteristics
+          2.3.1 Actors
          
-      - 2.4 Assumptions, dependencies and constraints
-             2.4.1 Domain Assumptions
-             2.4.2 Dependencies
+      2.4 Assumptions, dependencies and constraints
+          2.4.1 Domain Assumptions
+          2.4.2 Dependencies
     

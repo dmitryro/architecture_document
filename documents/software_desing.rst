@@ -5,13 +5,13 @@ TODO Application - Software Design Document
 Contents:
 ---------
 
-    **1. Introduction**
+  -  **1.** **Introduction**
 
-         1.1 Purpose
+         *1.1 Purpose*
          1.2 Scope
          1.3 Definitions
       
-    **2. Overall Description**
+  -  **2.** **Overall** **Description**
 
          2.1 Product Perspective
              2.1.1 Class Diagram

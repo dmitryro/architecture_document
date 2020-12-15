@@ -1,69 +1,56 @@
-# API compoment of the app 
- - a set of RESTful endpoints to save records, 
+# GUI compoment - a helper GUI to be used with API.
 
-Implemented using `Flask`, `Celery` and `Marchmallow`
-
-To use run 
+Implemented using Flask and Vue2
+To use, run 
 ```
 docker-compose up -d --build
 ```
-and open browser at 0.0.0.0:5000 or use Postman or curl to hit.
+and open browser at 0.0.0.0:5001
 
+# Static files
 
+`Static files` are located in `static` directory and have the following
+structure:
+- static
+   - js
+      - vue_app.js
+      - jquery_app.js
+   - css
+      - main.css
 
-# RESTful Endpoints
+- templates
+   - index.html
 
-`API` is a Flask application running using Gunicorn. 
+- routes
+   - `/`
+   - `/home`
 
-   `/anagram/<string:word_one>/<string:word_two>` 
-       Takes to strings : `word_one` and `word_two`, places them
-       into [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) queue, waits for result, reads result and
-       returns back True if valid anagram, False otherwice.
+   Routes to display the GUI with form and two panels - anagrams and
+   non-anagrams processed. 
 
-   `/readall/`
-       Read all the records from
-[MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database. Render them
-       as JSON using Marchmallow module.
+# GUI
+The GUI has a form for two words. Initial Vue validation is done on the 
+front end layer to verify no empty anagrams provided `vue_app.js` has the 
+logic for this. Once a pair of string is validated as either anagram or 
+non-anagram, it's added to either left (non-anagrams) or the right (anagrams)
+panel. Each panel contains the pairs that were previosly processed along whith
+the times whenan those agrams (non-anagrams) were processed. In case the API 
+returns true, the fading notificiation (fading alert) is displayed for the 
+success, if false - the fading notification (fading alert) is displayed for 
+failure (the result of the back end call after the front end validation 
+succeeds). More logic may be needed to perform different CRUD operations for
+anagrams and non-anagrams panels (left and right of the form. 
+For more details on structure please see
+`templates/index.html` and related javascript Vue code in `vue_app.js`.
+ 
 
-   `/readbystate/<int:valid>`   
-       Return all anagrams for valid = 1 and all non-anagrams
-       for valid = 0. 
-
-   `/delete/<int:id>`
-       Take a record id and remove it from
-[MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database.
-
-   `/check/<string:task_id>`
-       Provide a task ID and read task status - helper endpoint.
-
-# Models
-
-   - file `models.py`
-   - Models used: Record model to save 2 words, result of validations,
-     time processed.
-   
-# Marchmallow 
-   Marchmallow is a Python module alowing to serialize data into JSON
-   It uses schemas defined based on fields that need to be rendered - 
-   here we use it with Record model and construct schema out of model.
-
-   - file `models.py`
-   - Schemas: RecordSchema created out of Record model to render JSON.
-
-# Databases
-   - `maindb` is the
-     [MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) database used with SQLAlchemy to save records.
-   - `Dockerfile` contains the settings for user credentials
-   - `mysql/schema/schema.sql` contains the initial migration to create
-     when `docker-compose build` is run.
+The template `index.html` is a standard html template using `Vue2` to add
+some  interactivity. It's default Jinja2 template with no sub-templates.
+Bootstrap is used for responsive layout.
 
 ### TODO
- - Add Nginx support.
- - Add caching and optimize
-   [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) tasks for better performance.
- - Make MySQL connection configurable from cfg file.
- - Add more configurability for IPs/ports 
- - Add better migrations for
-   [MySQL](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/mysql) using SQLAlchemy.
- - Add more
-   [Celery](https://github.com/dmitryro/celery-docker-redis-mysql/tree/master/celery-queue) tasks and outsource the logic from endpoints into tasks.
+- Add support for `webpack`, `yarn`, `npm` to use with `Vue`.
+- Add asset compression.
+- Add more configuration options for assets.
+- Add configurable IP and port options for GUI.
+- Add more CRUD operations - removing items, updating.
